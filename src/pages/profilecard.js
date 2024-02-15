@@ -1,4 +1,4 @@
-
+// ProfileCard.js
 import React from 'react';
 import { Avatar, Typography, Box } from '@mui/material'; 
 
@@ -12,6 +12,12 @@ const ProfileCard = ({ user }) => {
         borderRadius: 10,
         padding: 2,
         marginBottom: 2,
+        transition: 'box-shadow 0.3s ease, transform 0.3s ease',
+        cursor: 'pointer',
+        '&:hover': {
+          boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+          transform: 'translateY(-2px)',
+        },
       }}
     >
       <Avatar alt={user?.first_name} src={user?.avatar} sx={{ width: 60, height: 60, marginRight: 2 }} /> 

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, InputBase, Typography, Grid, Box, ThemeProvider, createTheme, styled, Divider } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -29,6 +28,7 @@ const StyledInputBase = styled(InputBase)({
 const UserDetails = () => {
   const [admins, setAdmins] = useState([]);
   const [members, setMembers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     axios.get(apiUrl)
@@ -44,6 +44,22 @@ const UserDetails = () => {
       });
   }, []);
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredAdmins = admins.filter(user => 
+    user.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredMembers = members.filter(user => 
+    user.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <ThemeProvider theme={theme}>
       <div>
@@ -57,16 +73,17 @@ const UserDetails = () => {
               placeholder="Search…"
               startAdornment={<SearchIcon style={{ color: 'black' }} />}
               sx={{ pl: 6 }}
+              onChange={handleSearchChange}
             />
           </Toolbar>
         </AppBar>
         <Grid container spacing={2} marginTop={2}>
           <Grid item xs={12}>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.8)' }}>
               Administrators
             </Typography>
             <Grid container spacing={2}>
-              {admins.map(user => (
+              {filteredAdmins.map(user => (
                 <Grid key={user.email} item xs={12} sm={6} md={3}>
                   <ProfileCard user={user} />
                 </Grid>
@@ -75,11 +92,11 @@ const UserDetails = () => {
             <Divider />
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.8)' }}>
               Members
             </Typography>
             <Grid container spacing={2}>
-              {members.map(user => (
+              {filteredMembers.map(user => (
                 <Grid key={user.email} item xs={12} sm={6} md={3}>
                   <ProfileCard user={user} />
                 </Grid>
